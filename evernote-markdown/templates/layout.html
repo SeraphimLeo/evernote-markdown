@@ -1,0 +1,20 @@
+<!doctype html>
+<title>jQuery Example</title>
+<script type="text/javascript"
+        src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript">
+    var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
+<style>
+    .user-input{
+        width: 49%;
+        display: inline-block;
+        vertical-align: top;
+    }
+    .markdown-output{
+        width: 49%;
+        display: inline-block;
+        vertical-align: top;
+    }
+</style>
+{% block body %}{% endblock %}

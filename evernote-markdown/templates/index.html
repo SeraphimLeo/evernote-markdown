@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block body %}
+    <script type="text/javascript">
+        $(function () {
+            $("#user-input").on("input propertychange", function () {
+                $.ajax({
+                    url: "/markdown",
+                    method: "post",
+                    contentType: "text",
+                    data: $(this).val()
+                }).success(function (data) {
+                    $(".markdown-output").html(data);
+                })
+            });
+        });
+    </script>
+    <h1>MarkDown Exmaple</h1>
+    <div class="user-input">
+        <textarea id="user-input"></textarea>
+    </div>
+    <div class="markdown-output"></div>
+{% endblock %}
