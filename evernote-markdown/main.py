@@ -10,7 +10,6 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-
 @app.route('/markdown', methods=['POST'])
 def trans2markdown():
     text_input = request.get_data()

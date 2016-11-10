@@ -2,13 +2,21 @@
 {% block body %}
     <script type="text/javascript">
         $(function () {
-            $("#user-input").on("input propertychange", function () {
+            myTextarea = $("#code")[0];
+            var editor = CodeMirror.fromTextArea(myTextarea, {
+                mode: "text/x-markdown",
+                lineNumbers: true
+            });
+
+            CodeMirror.on(editor, "changes", function (instance, changeObject) {
+{#                console.log(instance.getDoc().getValue());#}
+{#                console.log(instance);#}
+{#                console.log(changeObject);#}
                 $.ajax({
-                    url: "/markdown",
-                    method: "post",
-                    contentType: "text",
-                    data: $(this).val()
-                }).success(function (data) {
+                    url:"markdown",
+                    method:"post",
+                    data:instance.getDoc().getValue()
+                }).success(function(data){
                     $(".markdown-output").html(data);
                 })
             });
@@ -16,7 +24,7 @@
     </script>
     <h1>MarkDown Exmaple</h1>
     <div class="user-input">
-        <textarea id="user-input"></textarea>
+        <textarea id="code"></textarea>
     </div>
     <div class="markdown-output"></div>
 {% endblock %}

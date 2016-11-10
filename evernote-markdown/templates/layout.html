@@ -1,17 +1,27 @@
 <!doctype html>
-<title>jQuery Example</title>
+<title>Markkdown Example</title>
 <script type="text/javascript"
-        src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        src="static/js-lib/jquery.min.js"></script>
+
+<!-- Create a simple CodeMirror instance -->
+<link rel="stylesheet" href="static/js-lib/codemirror/codemirror.css">
+<script src="static/js-lib/codemirror/codemirror.js"></script>
+<script src="static/js-lib/codemirror/mode/markdown.js"></script>
+
+
 <script type="text/javascript">
     var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 </script>
+
+<link href="http://markdowncss.github.io/retro/css/retro.css" rel="stylesheet">
 <style>
-    .user-input{
+    .user-input {
         width: 49%;
         display: inline-block;
         vertical-align: top;
     }
-    .markdown-output{
+
+    .markdown-output {
         width: 49%;
         display: inline-block;
         vertical-align: top;
