@@ -16,72 +16,222 @@
                         html = converter.makeHtml(text);
                 $(".markdown-output").html(html);
 
+                console.log(count(editor.getDoc()));
             });
 
-            $(".editor-toolbar li").on("click", function (e) {
-                console.log("click toolbar");
+            //创建文档
+            $(document).on("click", "#new-file", function (e) {
+                if (editor.getDoc().isClean()) {
+                    UIkit.modal.confirm("Are you sure?", function () {
+                        editor.getDoc().markClean();
+                    });
+                } else {
+                    editor.getDoc().markClean();
+                }
+
             });
+
+            //文字加粗
+            $(document).on("click", "#text-bolder", function (e) {
+                var doc = editor.getDoc();
+                var selectionText = doc.getSelection();
+                if (doc.somethingSelected()) {
+                    var replacement = "**" + selectionText + "**";
+                    doc.replaceSelection(replacement)
+                } else {
+
+                }
+            });
+
+
+            //字体倾斜
+            $(document).on("click", "#text-italic", function (e) {
+                var doc = editor.getDoc();
+                var selectionText = doc.getSelection();
+                if (doc.somethingSelected()) {
+                    var replacment = "*" + selectionText + "*";
+                    doc.replaceSelection(replacment);
+                }
+            });
+
+            //引用
+            $(document).on("click", "#text-quote", function (e) {
+                var doc = editor.getDoc();
+                var selectionText = doc.getSelection();
+                if (doc.somethingSelected()) {
+                    var replacement = ">" + selectionText;
+                    doc.replaceSelection(replacement);
+                }
+            });
+
+            //下划线
+            $(document).on("click", "#text-underline", function (e) {
+                var doc = editor.getDoc();
+                var selectionText = doc.getSelection();
+                if (doc.somethingSelected()) {
+                    var replacement = "_" + selectionText + "_";
+                    doc.replaceSelection(replacement);
+                }
+            });
+
+            //链接
+            $(document).on("click", "#text-link", function (e) {
+                var doc = editor.getDoc();
+                var selectionText = doc.getSelection();
+                if (doc.somethingSelected()) {
+                    var replacement = "[" + selectionText + "]()";
+                    doc.replaceSelection(replacement);
+                }
+            });
+
+            //无序列表
+            $(document).on("click", "#text-ul", function (e) {
+                var doc = editor.getDoc();
+                var selectionText = doc.getSelection();
+                if (doc.somethingSelected()) {
+                    var replacement = "* " + selectionText;
+                    doc.replaceSelection(replacement);
+                }
+            });
+
+            //有序列表
+            $(document).on("click", "#text-ol", function (e) {
+                var doc = editor.getDoc();
+                var selectionText = doc.getSelection();
+                if (doc.somethingSelected()) {
+                    var replacement = "1." + selectionText;
+                    doc.replaceSelection(replacement);
+                }
+            });
+
+            //标题
+            $(document).on("click", ".text-heahder-level", function (e) {
+                var doc = editor.getDoc();
+                var headerLevel = $(this).data("header-level");
+                console.log(headerLevel);
+                var selectionText = doc.getSelection();
+                if (doc.somethingSelected()) {
+                    var headerMark = "";
+                    for (var i = 0; i < headerLevel; i++) {
+                        headerMark += "#";
+                    }
+                    var replacement = headerMark + " " + selectionText;
+                    doc.replaceSelection(replacement);
+                }
+            });
+
+
+            //代码
+            $(document).on("click", "#text-code", function (e) {
+                var doc = editor.getDoc();
+                var selectionText = doc.getSelection();
+                if (doc.somethingSelected()) {
+                    var replacement = "```" + selectionText + "```";
+                    doc.replaceSelection(replacement);
+                }
+            });
+
         });
+
+        //统计行数
+        var count = function (doc) {
+            var lineCount = doc.lineCount();
+            return {lineCount: lineCount};
+        };
+
     </script>
-    <nav class="uk-navbar editor-toolbar">
+    <nav id="editor-toolbar" class="uk-navbar editor-toolbar">
         <ul class="uk-navbar-nav">
             <li class="uk-navbar-center">
-                <a href="javascript:void(0)" class="uk-navbar-nav-subtitle">
+                <a id="new-file" href="javascript:void(0)"
+                   class="uk-navbar-nav-subtitle">
+                    <i class="uk-icon-file-text"></i>
+                    <div>新建</div>
+                </a>
+            </li>
+            <li class="uk-navbar-center">
+                <a id="text-bolder" href="javascript:void(0)"
+                   class="uk-navbar-nav-subtitle">
                     <i class="uk-icon-bold"></i>
                     <div>加粗</div>
                 </a>
             </li>
             <li class="uk-navbar-center">
-                <a href="javascript:void(0)" class="uk-navbar-nav-subtitle">
+                <a id="text-italic" href="javascript:void(0)"
+                   class="uk-navbar-nav-subtitle">
                     <i class="uk-icon-italic"></i>
                     <div>倾斜</div>
                 </a>
             </li>
 
             <li class="uk-navbar-center">
-                <a href="javascript:void(0)" class="uk-navbar-nav-subtitle">
+                <a id="text-quote" href="javascript:void(0)"
+                   class="uk-navbar-nav-subtitle">
                     <i class="uk-icon-quote-left"></i>
                     <div>引用</div>
                 </a>
             </li>
             <li class="uk-navbar-center">
-                <a href="javascript:void(0)" class="uk-navbar-nav-subtitle">
+                <a id="text-underline" href="javascript:void(0)"
+                   class="uk-navbar-nav-subtitle">
                     <i class="uk-icon-underline"></i>
                     <div>下划线</div>
                 </a>
             </li>
             <li class="uk-navbar-center">
-                <a href="javascript:void(0)" class="uk-navbar-nav-subtitle">
+                <a id="text-link" href="javascript:void(0)"
+                   class="uk-navbar-nav-subtitle">
                     <i class="uk-icon-link"></i>
                     <div>链接</div>
                 </a>
             </li>
             <li class="uk-navbar-center">
-                <a href="javascript:void(0)" class="uk-navbar-nav-subtitle">
+                <a id="text-ul" href="javascript:void(0)"
+                   class="uk-navbar-nav-subtitle">
                     <i class="uk-icon-list-ul"></i>
                     <div>无序列表</div>
                 </a>
             </li>
             <li class="uk-navbar-center">
-                <a href="javascript:void(0)" class="uk-navbar-nav-subtitle">
+                <a id="text-ol" href="javascript:void(0)"
+                   class="uk-navbar-nav-subtitle">
                     <i class="uk-icon-list-ol"></i>
                     <div>有序列表</div>
                 </a>
             </li>
             <li class="uk-navbar-center uk-parent" data-uk-dropdown>
-                <a href="javascript:void(0)" class="uk-navbar-nav-subtitle">
+                <a id="text-header" href="javascript:void(0)"
+                   class="uk-navbar-nav-subtitle">
                     <i class="uk-icon-header"></i>
                     <i class="uk-icon-caret-down"></i>
                     <div>标题</div>
                 </a>
                 <div class="uk-dropdown uk-dropdown-navbar uk-dropdown-bottom">
                     <ul class="uk-nav uk-nav-navbar">
-                        <li><a href="#"><i class="uk-icon-header"></i>一级标题</a></li>
-                        <li><a href="#"><i class="uk-icon-header"></i>二级标题</a></li>
-                        <li><a href="#"><i class="uk-icon-header"></i>三级标题</a></li>
-                        <li><a href="#"><i class="uk-icon-header"></i>四级标题</a></li>
-                        <li><a href="#"><i class="uk-icon-header"></i>五级标题</a></li>
-                        <li><a href="#"><i class="uk-icon-header"></i>六级标题</a></li>
+                        <li><a class="text-heahder-level" data-header-level="1"
+                               href="javascript:void(0)"><i
+                                class="uk-icon-header"></i>一级标题</a>
+                        </li>
+                        <li><a class="text-heahder-level" data-header-level="2"
+                               href="javascript:void(0)"><i
+                                class="uk-icon-header"></i>二级标题</a>
+                        </li>
+                        <li><a class="text-heahder-level" data-header-level="3"
+                               href="javascript:void(0)"><i
+                                class="uk-icon-header"></i>三级标题</a>
+                        </li>
+                        <li><a class="text-heahder-level" data-header-level="4"
+                               href="javascript:void(0)"><i
+                                class="uk-icon-header"></i>四级标题</a>
+                        </li>
+                        <li><a class="text-heahder-level" data-header-level="5"
+                               href="javascript:void(0)"><i
+                                class="uk-icon-header"></i>五级标题</a>
+                        </li>
+                        <li><a class="text-heahder-level" data-header-level="6"
+                               href="javascript:void(0)"><i
+                                class="uk-icon-header"></i>六级标题</a>
+                        </li>
                     </ul>
                 </div>
             </li>
@@ -92,7 +242,8 @@
                 </a>
             </li>
             <li class="uk-navbar-center">
-                <a href="javascript:void(0)" class="uk-navbar-nav-subtitle">
+                <a id="text-code" href="javascript:void(0)"
+                   class="uk-navbar-nav-subtitle">
                     <i class="uk-icon-code"></i>
                     <div>代码</div>
                 </a>
