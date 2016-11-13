@@ -2,14 +2,15 @@
 {% block body %}
     <script type="text/javascript">
         $(function () {
-            myTextarea = $("#code")[0];
+            myTextarea = $("#editor")[0];
             var editor = CodeMirror.fromTextArea(myTextarea, {
                 mode: "text/x-markdown",
                 lineNumbers: true,
-                fixedGutter: false,
+                {#                fixedGutter: false,#}
                 viewportMargin: 100
             });
 
+            //注册 change 事件
             CodeMirror.on(editor, "changes", function (instance, changeObject) {
                 var converter = new showdown.Converter(),
                         text = instance.getDoc().getValue(),
@@ -19,117 +20,175 @@
                 console.log(count(editor.getDoc()));
             });
 
-            //创建文档
-            $(document).on("click", "#new-file", function (e) {
-                if (editor.getDoc().isClean()) {
-                    UIkit.modal.confirm("Are you sure?", function () {
-                        editor.getDoc().markClean();
-                    });
-                } else {
-                    editor.getDoc().markClean();
-                }
-
-            });
+            {#            //创建文档#}
+            {#            $(document).on("click", "#new-file", function (e) {#}
+            {#                var doc = editor.getDoc();#}
+            {#                if (!doc.isClean()) {#}
+            {#                    UIkit.modal.confirm("当前文档尚未保存，确定清空么？", function () {#}
+            {#                        doc.markClean();#}
+            {#                    });#}
+            {#                }#}
+            {##}
+            {#            });#}
 
             //文字加粗
             $(document).on("click", "#text-bolder", function (e) {
                 var doc = editor.getDoc();
-                var selectionText = doc.getSelection();
                 if (doc.somethingSelected()) {
+                    var selectionText = doc.getSelection();
                     var replacement = "**" + selectionText + "**";
                     doc.replaceSelection(replacement)
                 } else {
-
+                    var cursorPos = doc.getCursor();
+                    doc.replaceSelection("****");
+                    doc.setCursor({line: cursorPos.line, ch: cursorPos.ch + 2});
                 }
+                editor.focus();
             });
 
 
             //字体倾斜
             $(document).on("click", "#text-italic", function (e) {
                 var doc = editor.getDoc();
-                var selectionText = doc.getSelection();
                 if (doc.somethingSelected()) {
+                    var selectionText = doc.getSelection();
                     var replacment = "*" + selectionText + "*";
                     doc.replaceSelection(replacment);
+                } else {
+                    var cursorPos = doc.getCursor();
+                    doc.replaceSelection("**");
+                    doc.setCursor({line: cursorPos.line, ch: cursorPos.ch + 1});
                 }
+                editor.focus();
             });
 
             //引用
             $(document).on("click", "#text-quote", function (e) {
                 var doc = editor.getDoc();
-                var selectionText = doc.getSelection();
                 if (doc.somethingSelected()) {
+                    var selectionText = doc.getSelection();
                     var replacement = ">" + selectionText;
                     doc.replaceSelection(replacement);
+                } else {
+                    var cursorPos = doc.getCursor();
+                    doc.replaceSelection("> ");
+                    doc.setCursor({line: cursorPos.line, ch: cursorPos.ch + 2});
                 }
+                editor.focus();
             });
 
             //下划线
             $(document).on("click", "#text-underline", function (e) {
                 var doc = editor.getDoc();
-                var selectionText = doc.getSelection();
                 if (doc.somethingSelected()) {
+                    var selectionText = doc.getSelection();
                     var replacement = "_" + selectionText + "_";
                     doc.replaceSelection(replacement);
+                } else {
+                    var cursorPos = doc.getCursor();
+                    doc.replaceSelection("__");
+                    doc.setCursor({line: cursorPos.line, ch: cursorPos.ch + 1});
                 }
+                editor.focus();
             });
 
             //链接
             $(document).on("click", "#text-link", function (e) {
                 var doc = editor.getDoc();
-                var selectionText = doc.getSelection();
                 if (doc.somethingSelected()) {
+                    var selectionText = doc.getSelection();
                     var replacement = "[" + selectionText + "]()";
                     doc.replaceSelection(replacement);
+                } else {
+                    var cursorPos = doc.getCursor();
+                    doc.replaceSelection("[]()");
+                    doc.setCursor({line: cursorPos.line, ch: cursorPos.ch + 1});
                 }
+                editor.focus();
             });
 
             //无序列表
             $(document).on("click", "#text-ul", function (e) {
                 var doc = editor.getDoc();
-                var selectionText = doc.getSelection();
                 if (doc.somethingSelected()) {
+                    var selectionText = doc.getSelection();
                     var replacement = "* " + selectionText;
                     doc.replaceSelection(replacement);
+                } else {
+                    var cursorPos = doc.getCursor();
+                    doc.replaceSelection("* ");
+                    doc.setCursor({line: cursorPos.line, ch: cursorPos.ch + 2});
                 }
+                editor.focus();
             });
 
             //有序列表
             $(document).on("click", "#text-ol", function (e) {
                 var doc = editor.getDoc();
-                var selectionText = doc.getSelection();
                 if (doc.somethingSelected()) {
-                    var replacement = "1." + selectionText;
+                    var selectionText = doc.getSelection();
+                    var replacement = "1. " + selectionText;
                     doc.replaceSelection(replacement);
+                } else {
+                    var cursorPos = doc.getCursor();
+                    doc.replaceSelection("1. ");
+                    doc.setCursor({line: cursorPos.line, ch: cursorPos.ch + 3});
                 }
+                editor.focus();
             });
 
             //标题
             $(document).on("click", ".text-heahder-level", function (e) {
                 var doc = editor.getDoc();
                 var headerLevel = $(this).data("header-level");
-                console.log(headerLevel);
-                var selectionText = doc.getSelection();
+                var headerMark = "";
+                for (var i = 0; i < headerLevel; i++) {
+                    headerMark += "#";
+                }
+                headerMark += " ";
+
                 if (doc.somethingSelected()) {
-                    var headerMark = "";
-                    for (var i = 0; i < headerLevel; i++) {
-                        headerMark += "#";
-                    }
+                    var selectionText = doc.getSelection();
                     var replacement = headerMark + " " + selectionText;
                     doc.replaceSelection(replacement);
+                } else {
+                    var cursorPos = doc.getCursor();
+                    doc.replaceSelection(headerMark);
+                    doc.setCursor({
+                        line: cursorPos.line,
+                        ch: cursorPos.ch + headerLevel + 1
+                    });
                 }
+                editor.focus();
             });
 
+            //段落
+            $(document).on("click", "#text-paragraph", function (e) {
+                var doc = editor.getDoc();
+                var cursorPos = doc.getCursor();
+                if(doc.somethingSelected()){
+                }
+            });
 
             //代码
             $(document).on("click", "#text-code", function (e) {
                 var doc = editor.getDoc();
-                var selectionText = doc.getSelection();
                 if (doc.somethingSelected()) {
+                    var selectionText = doc.getSelection();
                     var replacement = "```" + selectionText + "```";
                     doc.replaceSelection(replacement);
                 }
             });
+
+            //撤销
+            $(document).on("click", "#text-undo", function (e) {
+                editor.getDoc().undo();
+            });
+
+            //重做
+            $(document).on("click", '#text-redo', function (e) {
+                editor.getDoc().redo();
+            })
 
         });
 
@@ -143,60 +202,15 @@
     <nav id="editor-toolbar" class="uk-navbar editor-toolbar">
         <ul class="uk-navbar-nav">
             <li class="uk-navbar-center">
+                <a href="#my-id" data-uk-offcanvas>
+                    <i class="uk-icon-navicon"></i>
+                </a>
+            </li>
+            <li class="uk-navbar-center">
                 <a id="new-file" href="javascript:void(0)"
                    class="uk-navbar-nav-subtitle">
                     <i class="uk-icon-file-text"></i>
                     <div>新建</div>
-                </a>
-            </li>
-            <li class="uk-navbar-center">
-                <a id="text-bolder" href="javascript:void(0)"
-                   class="uk-navbar-nav-subtitle">
-                    <i class="uk-icon-bold"></i>
-                    <div>加粗</div>
-                </a>
-            </li>
-            <li class="uk-navbar-center">
-                <a id="text-italic" href="javascript:void(0)"
-                   class="uk-navbar-nav-subtitle">
-                    <i class="uk-icon-italic"></i>
-                    <div>倾斜</div>
-                </a>
-            </li>
-
-            <li class="uk-navbar-center">
-                <a id="text-quote" href="javascript:void(0)"
-                   class="uk-navbar-nav-subtitle">
-                    <i class="uk-icon-quote-left"></i>
-                    <div>引用</div>
-                </a>
-            </li>
-            <li class="uk-navbar-center">
-                <a id="text-underline" href="javascript:void(0)"
-                   class="uk-navbar-nav-subtitle">
-                    <i class="uk-icon-underline"></i>
-                    <div>下划线</div>
-                </a>
-            </li>
-            <li class="uk-navbar-center">
-                <a id="text-link" href="javascript:void(0)"
-                   class="uk-navbar-nav-subtitle">
-                    <i class="uk-icon-link"></i>
-                    <div>链接</div>
-                </a>
-            </li>
-            <li class="uk-navbar-center">
-                <a id="text-ul" href="javascript:void(0)"
-                   class="uk-navbar-nav-subtitle">
-                    <i class="uk-icon-list-ul"></i>
-                    <div>无序列表</div>
-                </a>
-            </li>
-            <li class="uk-navbar-center">
-                <a id="text-ol" href="javascript:void(0)"
-                   class="uk-navbar-nav-subtitle">
-                    <i class="uk-icon-list-ol"></i>
-                    <div>有序列表</div>
                 </a>
             </li>
             <li class="uk-navbar-center uk-parent" data-uk-dropdown>
@@ -236,9 +250,59 @@
                 </div>
             </li>
             <li class="uk-navbar-center">
-                <a href="javascript:void(0)" class="uk-navbar-nav-subtitle">
+                <a id="text-paragraph" href="javascript:void(0)"
+                   class="uk-navbar-nav-subtitle">
                     <i class="uk-icon-paragraph"></i>
                     <div>段落</div>
+                </a>
+            </li>
+            <li class="uk-navbar-center">
+                <a id="text-bolder" href="javascript:void(0)"
+                   class="uk-navbar-nav-subtitle">
+                    <i class="uk-icon-bold"></i>
+                    <div>加粗</div>
+                </a>
+            </li>
+            <li class="uk-navbar-center">
+                <a id="text-italic" href="javascript:void(0)"
+                   class="uk-navbar-nav-subtitle">
+                    <i class="uk-icon-italic"></i>
+                    <div>倾斜</div>
+                </a>
+            </li>
+            <li class="uk-navbar-center">
+                <a id="text-underline" href="javascript:void(0)"
+                   class="uk-navbar-nav-subtitle">
+                    <i class="uk-icon-underline"></i>
+                    <div>下划线</div>
+                </a>
+            </li>
+            <li class="uk-navbar-center">
+                <a id="text-ul" href="javascript:void(0)"
+                   class="uk-navbar-nav-subtitle">
+                    <i class="uk-icon-list-ul"></i>
+                    <div>无序列表</div>
+                </a>
+            </li>
+            <li class="uk-navbar-center">
+                <a id="text-ol" href="javascript:void(0)"
+                   class="uk-navbar-nav-subtitle">
+                    <i class="uk-icon-list-ol"></i>
+                    <div>有序列表</div>
+                </a>
+            </li>
+            <li class="uk-navbar-center">
+                <a id="text-quote" href="javascript:void(0)"
+                   class="uk-navbar-nav-subtitle">
+                    <i class="uk-icon-quote-left"></i>
+                    <div>引用</div>
+                </a>
+            </li>
+            <li class="uk-navbar-center">
+                <a id="text-link" href="javascript:void(0)"
+                   class="uk-navbar-nav-subtitle">
+                    <i class="uk-icon-link"></i>
+                    <div>链接</div>
                 </a>
             </li>
             <li class="uk-navbar-center">
@@ -248,12 +312,46 @@
                     <div>代码</div>
                 </a>
             </li>
+            <li class="uk-navbar-center">
+                <a id="text-undo" href="javascript:void(0)"
+                   class="uk-navbar-nav-subtitle">
+                    <i class="uk-icon-undo"></i>
+                    <div>撤销</div>
+                </a>
+            </li>
+            <li class="uk-navbar-center">
+                <a id="text-redo" href="javascript:void(0)"
+                   class="uk-navbar-nav-subtitle">
+                    <i class="uk-icon-repeat"></i>
+                    <div>重做</div>
+                </a>
+            </li>
         </ul>
     </nav>
     <div class="uk-container">
         <div class="user-input uk-width-1-2">
-            <textarea id="code"></textarea>
+            <textarea id="editor"></textarea>
         </div>
         <div class="markdown-output uk-width-1-2"></div>
     </div>
+
+    <!-- 抽屉式边栏 -->
+    <div id="my-id" class="uk-offcanvas">
+        <div class="uk-offcanvas-bar">
+            <div class="uk-panel">Lorem ipsum dolor sit amet, <a href="#">consectetur</a>
+                adipisicing elit, sed do eiusmod tempor incididunt ut labore et
+                dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                consequat.
+            </div>
+            <div class="uk-panel">
+                感谢您使用本软件，
+            </div>
+            <div class="uk-panel">
+                <a class="uk-icon-button uk-icon-github" href="#"></a>
+                <a class="uk-icon-button uk-icon-wordpress" href="#"></a>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
