@@ -5,26 +5,104 @@
             myTextarea = $("#code")[0];
             var editor = CodeMirror.fromTextArea(myTextarea, {
                 mode: "text/x-markdown",
-                lineNumbers: true
+                lineNumbers: true,
+                fixedGutter: false,
+                viewportMargin: 100
             });
 
             CodeMirror.on(editor, "changes", function (instance, changeObject) {
-{#                console.log(instance.getDoc().getValue());#}
-{#                console.log(instance);#}
-{#                console.log(changeObject);#}
-                $.ajax({
-                    url:"markdown",
-                    method:"post",
-                    data:instance.getDoc().getValue()
-                }).success(function(data){
-                    $(".markdown-output").html(data);
-                })
+                var converter = new showdown.Converter(),
+                        text = instance.getDoc().getValue(),
+                        html = converter.makeHtml(text);
+                $(".markdown-output").html(html);
+
+            });
+
+            $(".editor-toolbar li").on("click", function (e) {
+                console.log("click toolbar");
             });
         });
     </script>
-    <h1>MarkDown Exmaple</h1>
-    <div class="user-input">
-        <textarea id="code"></textarea>
+    <nav class="uk-navbar editor-toolbar">
+        <ul class="uk-navbar-nav">
+            <li class="uk-navbar-center">
+                <a href="javascript:void(0)" class="uk-navbar-nav-subtitle">
+                    <i class="uk-icon-bold"></i>
+                    <div>加粗</div>
+                </a>
+            </li>
+            <li class="uk-navbar-center">
+                <a href="javascript:void(0)" class="uk-navbar-nav-subtitle">
+                    <i class="uk-icon-italic"></i>
+                    <div>倾斜</div>
+                </a>
+            </li>
+
+            <li class="uk-navbar-center">
+                <a href="javascript:void(0)" class="uk-navbar-nav-subtitle">
+                    <i class="uk-icon-quote-left"></i>
+                    <div>引用</div>
+                </a>
+            </li>
+            <li class="uk-navbar-center">
+                <a href="javascript:void(0)" class="uk-navbar-nav-subtitle">
+                    <i class="uk-icon-underline"></i>
+                    <div>下划线</div>
+                </a>
+            </li>
+            <li class="uk-navbar-center">
+                <a href="javascript:void(0)" class="uk-navbar-nav-subtitle">
+                    <i class="uk-icon-link"></i>
+                    <div>链接</div>
+                </a>
+            </li>
+            <li class="uk-navbar-center">
+                <a href="javascript:void(0)" class="uk-navbar-nav-subtitle">
+                    <i class="uk-icon-list-ul"></i>
+                    <div>无序列表</div>
+                </a>
+            </li>
+            <li class="uk-navbar-center">
+                <a href="javascript:void(0)" class="uk-navbar-nav-subtitle">
+                    <i class="uk-icon-list-ol"></i>
+                    <div>有序列表</div>
+                </a>
+            </li>
+            <li class="uk-navbar-center uk-parent" data-uk-dropdown>
+                <a href="javascript:void(0)" class="uk-navbar-nav-subtitle">
+                    <i class="uk-icon-header"></i>
+                    <i class="uk-icon-caret-down"></i>
+                    <div>标题</div>
+                </a>
+                <div class="uk-dropdown uk-dropdown-navbar uk-dropdown-bottom">
+                    <ul class="uk-nav uk-nav-navbar">
+                        <li><a href="#"><i class="uk-icon-header"></i>一级标题</a></li>
+                        <li><a href="#"><i class="uk-icon-header"></i>二级标题</a></li>
+                        <li><a href="#"><i class="uk-icon-header"></i>三级标题</a></li>
+                        <li><a href="#"><i class="uk-icon-header"></i>四级标题</a></li>
+                        <li><a href="#"><i class="uk-icon-header"></i>五级标题</a></li>
+                        <li><a href="#"><i class="uk-icon-header"></i>六级标题</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li class="uk-navbar-center">
+                <a href="javascript:void(0)" class="uk-navbar-nav-subtitle">
+                    <i class="uk-icon-paragraph"></i>
+                    <div>段落</div>
+                </a>
+            </li>
+            <li class="uk-navbar-center">
+                <a href="javascript:void(0)" class="uk-navbar-nav-subtitle">
+                    <i class="uk-icon-code"></i>
+                    <div>代码</div>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <div class="uk-container">
+        <div class="user-input uk-width-1-2">
+            <textarea id="code"></textarea>
+        </div>
+        <div class="markdown-output uk-width-1-2"></div>
     </div>
-    <div class="markdown-output"></div>
 {% endblock %}

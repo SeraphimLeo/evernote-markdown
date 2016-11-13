@@ -5,15 +5,23 @@
 
 <!-- Create a simple CodeMirror instance -->
 <link rel="stylesheet" href="static/js-lib/codemirror/codemirror.css">
+<link rel="stylesheet" href="static/js-lib/uikit-2.25.0/css/uikit.min.css">
+
+<link rel="stylesheet" href="static/style/app.css">
+
 <script src="static/js-lib/codemirror/codemirror.js"></script>
 <script src="static/js-lib/codemirror/mode/markdown.js"></script>
 
+<script src="static/js-lib/uikit-2.25.0/js/uikit.min.js"></script>
+
+<!-- showdown markdown parser -->
+<script src="https://cdn.rawgit.com/showdownjs/showdown/1.5.0/dist/showdown.min.js"></script>
 
 <script type="text/javascript">
     var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 </script>
 
-<link href="http://markdowncss.github.io/retro/css/retro.css" rel="stylesheet">
+{#<link href="http://markdowncss.github.io/retro/css/retro.css" rel="stylesheet">#}
 <style>
     .user-input {
         width: 49%;
