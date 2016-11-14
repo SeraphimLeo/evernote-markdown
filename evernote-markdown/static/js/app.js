@@ -19,8 +19,13 @@ requirejs.config({
 });
 
 // Start the main app logic.
-requirejs(['jquery', 'uikit', '../js-lib/showdown.min', '../js-lib/codemirror-5.20.2/lib/codemirror', '../js-lib/codemirror-5.20.2/mode/markdown/markdown'],
-    function ($, UI, showdown, CodeMirror, md) {
+requirejs(['jquery',
+        'uikit',
+        'utils',
+        '../js-lib/showdown.min',
+        '../js-lib/codemirror-5.20.2/lib/codemirror',
+        '../js-lib/codemirror-5.20.2/mode/markdown/markdown'],
+    function ($, UI, utils, showdown, CodeMirror, md) {
         // myTextarea = $("#editor")[0];
         var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
             mode: "markdown",
@@ -35,7 +40,7 @@ requirejs(['jquery', 'uikit', '../js-lib/showdown.min', '../js-lib/codemirror-5.
                 text = instance.getDoc().getValue(),
                 html = converter.makeHtml(text);
             $(".markdown-output").html(html);
-            console.log(count(editor.getDoc()));
+            console.log(utils.count(editor.getDoc()));
         });
 
         //设置键盘映射
@@ -46,15 +51,37 @@ requirejs(['jquery', 'uikit', '../js-lib/showdown.min', '../js-lib/codemirror-5.
                 var currentLine = doc.getLine(cursorPos.line);
                 console.log(currentLine);
 
-                // 引用标记的自动完成
-                var ulRegExp = new RegExp("^\> ");
-                if (ulRegExp.test(currentLine)) {
+                // 标题标记
+                var headerRegExp = new RegExp("^#+ ");
+
+                // 引用标记
+                var quoteRegExp = new RegExp("^> ");
+
+                // 无序列表
+                var ulRegExp = new RegExp("^\\* ");
+
+                // 有序列表
+                var olRegExp = new RegExp("^\\d+\. ");
+
+                if (headerRegExp.test(currentLine)) {
+                    // 在标题输入完毕之后 向后插入一个段落
+                    doc.replaceSelection(doc.lineSeparator());
+                    doc.replaceSelection(doc.lineSeparator());
+                } else if (quoteRegExp.test(currentLine)) {
                     doc.replaceSelection(doc.lineSeparator());
                     doc.replaceSelection("> ");
                     console.log(doc.getCursor());
+                } else if (ulRegExp.test(currentLine)) {
+                    doc.replaceSelection(doc.lineSeparator());
+                    doc.replaceSelection("* ");
+                } else if (olRegExp.test(currentLine)) {
+                    var nextOrderNumber = eval(olRegExp.exec(currentLine)[0].trim().slice(0, -1)) + 1;
+                    doc.replaceSelection(doc.lineSeparator());
+                    doc.replaceSelection(nextOrderNumber + ". ");
+                } else {
+                    //如果全部都不匹配 则直接输出换行符
+                    doc.replaceSelection(doc.lineSeparator());
                 }
-
-
                 // 拦截 Enter 键之后向文档中输出一个换行符
                 // doc.replaceSelection(doc.lineSeparator());
             },
@@ -235,9 +262,3 @@ requirejs(['jquery', 'uikit', '../js-lib/showdown.min', '../js-lib/codemirror-5.
             editor.getDoc().redo();
         })
     });
-
-//统计行数
-var count = function (doc) {
-    var lineCount = doc.lineCount();
-    return {lineCount: lineCount};
-};
