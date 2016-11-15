@@ -127,12 +127,29 @@
                     <div>重做</div>
                 </a>
             </li>
-            <li class="uk-navbar-center">
-                <a id="bind-css" href="javascript:void(0)"
+            <li class="uk-navbar-center uk-parent" data-uk-dropdown>
+                <a href="javascript:void(0)"
                    class="uk-navbar-nav-subtitle">
                     <i class="uk-icon-paint-brush"></i>
+                    <i class="uk-icon-caret-down"></i>
                     <div>更换样式</div>
                 </a>
+                <div class="uk-dropdown uk-dropdown-navbar uk-dropdown-bottom">
+                    <ul class="uk-nav uk-nav-navbar">
+                        <li>
+                            <a class="bind-css" data-style-name="default"
+                               href="javascript:void(0)">
+                                <i class="uk-icon-paint-brush"></i>
+                                默认风格
+                            </a>
+                            <a class="bind-css" data-style-name="evernote"
+                               href="javascript:void(0)">
+                                <i class="uk-icon-paint-brush"></i>
+                                印象笔记风格
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </li>
         </ul>
     </nav>

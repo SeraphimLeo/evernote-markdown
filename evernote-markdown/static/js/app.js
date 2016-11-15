@@ -260,14 +260,11 @@ requirejs(['jquery',
         });
 
         //更换样式
-        $(document).on("click", "#bind-css", function (e) {
-            console.log("BIND CSS");
-
-            var link = document.createElement("link");
-            link.rel = "stylesheet";
-            link.href = "static/style/demo.css";
-            var head = document.getElementsByTagName("head")[0];
-            head.appendChild(link);
+        $(document).on("click", ".bind-css", function (e) {
+            var styleName = $(this).data('style-name');
+            var styleFile = "static/style/markdown-style/" + styleName + ".css"
+            $("#style-file").attr("href", styleFile);
+            console.log("test bing css file");
         });
 
 
