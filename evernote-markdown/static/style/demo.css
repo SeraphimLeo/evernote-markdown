@@ -1,0 +1,26 @@
+.markdown-output {
+}
+
+.markdown-output h1,
+.markdown-output h2,
+.markdown-output h3,
+.markdown-output h4,
+.markdown-output h5,
+.markdown-output h6 {
+    color: #57ad68;
+}
+
+.markdown-output blockquote {
+    border-left-color: #57ad68;
+    border-left-width: .3em;
+}
+
+.markdown-output a {
+    color: #27292B;
+    -webkit-transition: color 0.2s ease-in-out;
+    transition: color 0.2s ease-in-out;
+}
+
+.markdown-output a:hover {
+    color: #5b9dd9;
+}

@@ -4,28 +4,30 @@
 
 requirejs.config({
     baseUrl: "static/js",
-    //By default load any module IDs from js/lib
     paths: {
         "jquery": "../js-lib/jquery.min",
         "uikit": "../js-lib/uikit-2.25.0/js/uikit.min"
-        // ,"showdown": "../js-lib/showdown.min"
+    },
+    config: {
+        "uikit": {
+            "base": "../js-lib/uikit-2.25.0"
+        }
+    },
+    shim: {
+        "uikit": {
+            deps: ['jquery']
+        }
     }
-    // , packages: [{
-    //     name: "codemirror",
-    //     location: "../js-lib/codemirror-5.20.2",
-    //     main: "lib/codemirror"
-    // }]
-
 });
 
-// Start the main app logic.
 requirejs(['jquery',
         'uikit',
         'utils',
         '../js-lib/showdown.min',
         '../js-lib/codemirror-5.20.2/lib/codemirror',
-        '../js-lib/codemirror-5.20.2/mode/markdown/markdown'],
-    function ($, UI, utils, showdown, CodeMirror, md) {
+        '../js-lib/codemirror-5.20.2/mode/markdown/markdown',
+        'markdown-editor'],
+    function ($, UI, utils, showdown, CodeMirror, md, me) {
         // myTextarea = $("#editor")[0];
         var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
             mode: "markdown",
@@ -65,12 +67,10 @@ requirejs(['jquery',
 
                 if (headerRegExp.test(currentLine)) {
                     // 在标题输入完毕之后 向后插入一个段落
-                    doc.replaceSelection(doc.lineSeparator());
-                    doc.replaceSelection(doc.lineSeparator());
+                    me.insert.paragraph(cm);
                 } else if (quoteRegExp.test(currentLine)) {
                     doc.replaceSelection(doc.lineSeparator());
                     doc.replaceSelection("> ");
-                    console.log(doc.getCursor());
                 } else if (ulRegExp.test(currentLine)) {
                     doc.replaceSelection(doc.lineSeparator());
                     doc.replaceSelection("* ");
@@ -79,14 +79,19 @@ requirejs(['jquery',
                     doc.replaceSelection(doc.lineSeparator());
                     doc.replaceSelection(nextOrderNumber + ". ");
                 } else {
-                    //如果全部都不匹配 则直接输出换行符
+                    //如果全部都不匹配 则直接输出一个换行符
                     doc.replaceSelection(doc.lineSeparator());
                 }
-                // 拦截 Enter 键之后向文档中输出一个换行符
-                // doc.replaceSelection(doc.lineSeparator());
             },
-            "Cmd-1": function (cm) {
-                console.log("cmd-1");
+            "Ctrl-Enter": function (cm) {
+                // 使用 Ctrl-Enter 时自动向下加入一个段落
+                me.insert.paragraph(cm)
+            },
+            "Ctrl-1": function (cm) {
+                console.log("ctrl-1");
+            },
+            "Ctrl-2": function (cm) {
+                console.log("ctrl-2");
             }
             //todo 实现其他快捷键
         });
@@ -239,6 +244,8 @@ requirejs(['jquery',
             var doc = editor.getDoc();
             var cursorPos = doc.getCursor();
             if (doc.somethingSelected()) {
+            } else {
+                me.insert.paragraph(editor);
             }
         });
 
@@ -251,6 +258,18 @@ requirejs(['jquery',
                 doc.replaceSelection(replacement);
             }
         });
+
+        //更换样式
+        $(document).on("click", "#bind-css", function (e) {
+            console.log("BIND CSS");
+
+            var link = document.createElement("link");
+            link.rel = "stylesheet";
+            link.href = "static/style/demo.css";
+            var head = document.getElementsByTagName("head")[0];
+            head.appendChild(link);
+        });
+
 
         //撤销
         $(document).on("click", "#text-undo", function (e) {
