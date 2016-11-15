@@ -24,3 +24,7 @@
 .markdown-output a:hover {
     color: #5b9dd9;
 }
+
+.markdown-output em {
+    color: #777;
+}

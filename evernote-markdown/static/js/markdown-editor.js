@@ -8,6 +8,7 @@ define(['../js-lib/codemirror-5.20.2/lib/codemirror'], function (CodeMirror) {
         var doc = editor.getDoc();
         doc.replaceSelection(doc.lineSeparator());
         doc.replaceSelection(doc.lineSeparator());
+        editor.focus();
         console.log("insert a paragraph");
     };
 
