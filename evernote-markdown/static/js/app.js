@@ -10,7 +10,7 @@ requirejs.config({
     },
     config: {
         "uikit": {
-            "base": "../js-lib/uikit-2.25.0"
+            "base": "../js-lib/uikit-2.25.0/js/"
         }
     },
     shim: {
@@ -21,7 +21,7 @@ requirejs.config({
 });
 
 requirejs(['jquery',
-        'uikit',
+        'uikit!tooltip',
         'utils',
         '../js-lib/showdown.min',
         '../js-lib/codemirror-5.20.2/lib/codemirror',
@@ -95,9 +95,39 @@ requirejs(['jquery',
                 me.insert.header(cm, 2);
                 console.log("cmd-2");
             },
+            "Cmd-3": function (cm) {
+                me.insert.header(cm, 3);
+            },
+            "Cmd-4": function (cm) {
+                me.insert.header(cm, 4);
+            },
+            "Cmd-5": function (cm) {
+                me.insert.header(cm, 5);
+            },
+            "Cmd-6": function (cm) {
+                me.insert.header(cm, 6);
+            },
+            "Cmd-B": function (cm) {
+                me.insert.bold(cm);
+            },
+            "Cmd-I": function (cm) {
+                me.insert.italic(cm);
+            },
+            "Shift-Cmd-U": function (cm) {
+                me.insert.ul(cm);
+            },
+            "Shift-Cmd-O": function (cm) {
+                me.insert.ol(cm);
+            },
+            "Shift-Cmd-B": function (cm) {
+                me.insert.quote(cm);
+            },
             "Shift-Cmd-K": function (cm) {
                 me.insert.link(cm);
                 console.log("cmd-k");
+            },
+            "Cmd-K": function (cm) {
+                me.insert.code(cm);
             }
         });
 
@@ -115,48 +145,18 @@ requirejs(['jquery',
 
         //文字加粗
         $(document).on("click", "#text-bolder", function (e) {
-            var doc = editor.getDoc();
-            if (doc.somethingSelected()) {
-                var selectionText = doc.getSelection();
-                var replacement = "**" + selectionText + "**";
-                doc.replaceSelection(replacement)
-            } else {
-                var cursorPos = doc.getCursor();
-                doc.replaceSelection("****");
-                doc.setCursor({line: cursorPos.line, ch: cursorPos.ch + 2});
-            }
-            editor.focus();
+            me.insert.bold(editor);
         });
 
 
         //字体倾斜
         $(document).on("click", "#text-italic", function (e) {
-            var doc = editor.getDoc();
-            if (doc.somethingSelected()) {
-                var selectionText = doc.getSelection();
-                var replacment = "*" + selectionText + "*";
-                doc.replaceSelection(replacment);
-            } else {
-                var cursorPos = doc.getCursor();
-                doc.replaceSelection("**");
-                doc.setCursor({line: cursorPos.line, ch: cursorPos.ch + 1});
-            }
-            editor.focus();
+            me.insert.italic(editor);
         });
 
         //引用
         $(document).on("click", "#text-quote", function (e) {
-            var doc = editor.getDoc();
-            if (doc.somethingSelected()) {
-                var selectionText = doc.getSelection();
-                var replacement = ">" + selectionText;
-                doc.replaceSelection(replacement);
-            } else {
-                var cursorPos = doc.getCursor();
-                doc.replaceSelection("> ");
-                doc.setCursor({line: cursorPos.line, ch: cursorPos.ch + 2});
-            }
-            editor.focus();
+            me.insert.quote(editor);
         });
 
         //下划线
@@ -181,32 +181,12 @@ requirejs(['jquery',
 
         //无序列表
         $(document).on("click", "#text-ul", function (e) {
-            var doc = editor.getDoc();
-            if (doc.somethingSelected()) {
-                var selectionText = doc.getSelection();
-                var replacement = "* " + selectionText;
-                doc.replaceSelection(replacement);
-            } else {
-                var cursorPos = doc.getCursor();
-                doc.replaceSelection("* ");
-                doc.setCursor({line: cursorPos.line, ch: cursorPos.ch + 2});
-            }
-            editor.focus();
+            me.insert.ul(editor);
         });
 
         //有序列表
         $(document).on("click", "#text-ol", function (e) {
-            var doc = editor.getDoc();
-            if (doc.somethingSelected()) {
-                var selectionText = doc.getSelection();
-                var replacement = "1. " + selectionText;
-                doc.replaceSelection(replacement);
-            } else {
-                var cursorPos = doc.getCursor();
-                doc.replaceSelection("1. ");
-                doc.setCursor({line: cursorPos.line, ch: cursorPos.ch + 3});
-            }
-            editor.focus();
+            em.insert.ol(editor);
         });
 
         //标题
@@ -218,21 +198,12 @@ requirejs(['jquery',
         //段落
         $(document).on("click", "#text-paragraph", function (e) {
             var doc = editor.getDoc();
-            var cursorPos = doc.getCursor();
-            if (doc.somethingSelected()) {
-            } else {
-                me.insert.paragraph(editor);
-            }
+            me.insert.paragraph(editor);
         });
 
         //代码
         $(document).on("click", "#text-code", function (e) {
-            var doc = editor.getDoc();
-            if (doc.somethingSelected()) {
-                var selectionText = doc.getSelection();
-                var replacement = "```" + selectionText + "```";
-                doc.replaceSelection(replacement);
-            }
+            me.insert.code(editor);
         });
 
         //更换样式
