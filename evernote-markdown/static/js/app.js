@@ -46,7 +46,7 @@ requirejs(['jquery',
         });
 
         //设置键盘映射
-        editor.setOption("extraKeys", {
+        editor.addKeyMap({
             Enter: function (cm) {
                 var doc = cm.getDoc();
                 var cursorPos = doc.getCursor();
@@ -87,13 +87,18 @@ requirejs(['jquery',
                 // 使用 Ctrl-Enter 时自动向下加入一个段落
                 me.insert.paragraph(cm)
             },
-            "Ctrl-1": function (cm) {
-                console.log("ctrl-1");
+            "Cmd-1": function (cm) {
+                me.insert.header(cm, 1);
+                console.log("cmd-1");
             },
-            "Ctrl-2": function (cm) {
-                console.log("ctrl-2");
+            "Cmd-2": function (cm) {
+                me.insert.header(cm, 2);
+                console.log("cmd-2");
+            },
+            "Shift-Cmd-K": function (cm) {
+                me.insert.link(cm);
+                console.log("cmd-k");
             }
-            //todo 实现其他快捷键
         });
 
 
@@ -171,17 +176,7 @@ requirejs(['jquery',
 
         //链接
         $(document).on("click", "#text-link", function (e) {
-            var doc = editor.getDoc();
-            if (doc.somethingSelected()) {
-                var selectionText = doc.getSelection();
-                var replacement = "[" + selectionText + "]()";
-                doc.replaceSelection(replacement);
-            } else {
-                var cursorPos = doc.getCursor();
-                doc.replaceSelection("[]()");
-                doc.setCursor({line: cursorPos.line, ch: cursorPos.ch + 1});
-            }
-            editor.focus();
+            me.insert.link(editor);
         });
 
         //无序列表
@@ -216,27 +211,8 @@ requirejs(['jquery',
 
         //标题
         $(document).on("click", ".text-heahder-level", function (e) {
-            var doc = editor.getDoc();
             var headerLevel = $(this).data("header-level");
-            var headerMark = "";
-            for (var i = 0; i < headerLevel; i++) {
-                headerMark += "#";
-            }
-            headerMark += " ";
-
-            if (doc.somethingSelected()) {
-                var selectionText = doc.getSelection();
-                var replacement = headerMark + " " + selectionText;
-                doc.replaceSelection(replacement);
-            } else {
-                var cursorPos = doc.getCursor();
-                doc.replaceSelection(headerMark);
-                doc.setCursor({
-                    line: cursorPos.line,
-                    ch: cursorPos.ch + headerLevel + 1
-                });
-            }
-            editor.focus();
+            me.insert.header(editor, headerLevel);
         });
 
         //段落
