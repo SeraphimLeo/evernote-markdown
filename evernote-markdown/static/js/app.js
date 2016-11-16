@@ -3,6 +3,7 @@
  */
 
 requirejs.config({
+    urlArgs: "bust=" + (new Date()).getTime(),
     baseUrl: "static/js",
     paths: {
         "jquery": "../js-lib/jquery.min",
@@ -87,6 +88,10 @@ requirejs(['jquery',
                 // 使用 Ctrl-Enter 时自动向下加入一个段落
                 me.insert.paragraph(cm)
             },
+            "Shift-Enter": function (cm) {
+                me.insert.newline(cm);
+                console.log("shift-enter");
+            },
             "Cmd-1": function (cm) {
                 me.insert.header(cm, 1);
                 console.log("cmd-1");
@@ -124,7 +129,15 @@ requirejs(['jquery',
             },
             "Shift-Cmd-K": function (cm) {
                 me.insert.link(cm);
-                console.log("cmd-k");
+                console.log("shift-cmd-k");
+            },
+            "Shift-Cmd-I": function (cm) {
+                me.insert.image(cm);
+                console.log("shift-cmd-i");
+            },
+            "Shift-Cmd-H": function (cm) {
+                me.insert.hr(cm);
+                console.log("shift-cmd-h");
             },
             "Cmd-K": function (cm) {
                 me.insert.code(cm);
@@ -177,6 +190,16 @@ requirejs(['jquery',
         //链接
         $(document).on("click", "#text-link", function (e) {
             me.insert.link(editor);
+        });
+
+        //图片
+        $(document).on("click", "#text-image", function (e) {
+            me.insert.image(editor);
+        });
+
+        //水平线
+        $(document).on("click", "#text-hr", function (e) {
+            me.insert.hr(editor);
         });
 
         //无序列表

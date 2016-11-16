@@ -4,11 +4,22 @@
 
 define(['../js-lib/codemirror-5.20.2/lib/codemirror'], function (CodeMirror) {
 
+    var _insertNewLine = function (editor) {
+        var doc = editor.getDoc();
+        if (doc.somethingSelected()) {
+
+        } else {
+            editor.execCommand("goLineEnd");
+            doc.replaceSelection(doc.lineSeparator());
+        }
+        editor.focus();
+    };
+
     var _insertParagraph = function (editor) {
         var doc = editor.getDoc();
-        if(doc.somethingSelected()){
+        if (doc.somethingSelected()) {
 
-        }else{
+        } else {
             doc.replaceSelection(doc.lineSeparator());
             doc.replaceSelection(doc.lineSeparator());
         }
@@ -27,6 +38,30 @@ define(['../js-lib/codemirror-5.20.2/lib/codemirror'], function (CodeMirror) {
             doc.replaceSelection("[]()");
             doc.setCursor({line: cursorPos.line, ch: cursorPos.ch + 1});
         }
+        editor.focus();
+    };
+
+    var _insertImage = function (editor) {
+        var doc = editor.getDoc();
+        if (doc.somethingSelected()) {
+            var selectionText = doc.getSelection();
+            var replacement = "![" + selectionText + "]()";
+            doc.replaceSelection(replacement);
+        } else {
+            var cursorPos = doc.getCursor();
+            doc.replaceSelection("![]()");
+            doc.setCursor({line: cursorPos.line, ch: cursorPos.ch + 2});
+        }
+        editor.focus();
+    };
+
+    var _insertHr = function (editor) {
+        var doc = editor.getDoc();
+        doc.replaceSelection(doc.lineSeparator());
+        doc.replaceSelection(doc.lineSeparator());
+        doc.replaceSelection("------");
+        doc.replaceSelection(doc.lineSeparator());
+        doc.replaceSelection(doc.lineSeparator());
         editor.focus();
     };
 
@@ -132,14 +167,18 @@ define(['../js-lib/codemirror-5.20.2/lib/codemirror'], function (CodeMirror) {
         }
     };
 
+
     return {
         insert: {
             header: _insertHeader,
             paragraph: _insertParagraph,
+            newline: _insertNewLine,
             bold: _insertBold,
             italic: _insertItalic,
             quote: _insertQuote,
             link: _insertLink,
+            image: _insertImage,
+            hr: _insertHr,
             ul: _insertUl,
             ol: _insertOl,
             code: _insertCode
