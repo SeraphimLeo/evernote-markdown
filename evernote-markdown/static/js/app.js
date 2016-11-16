@@ -6,12 +6,12 @@ requirejs.config({
     urlArgs: "bust=" + (new Date()).getTime(),
     baseUrl: "static/js",
     paths: {
-        "jquery": "../js-lib/jquery.min",
-        "uikit": "../js-lib/uikit-2.25.0/js/uikit.min"
+        "jquery": "vendor/jquery.min",
+        "uikit": "vendor/uikit-2.25.0/js/uikit.min"
     },
     config: {
         "uikit": {
-            "base": "../js-lib/uikit-2.25.0/js/"
+            "base": "vendor/uikit-2.25.0/js/"
         }
     },
     shim: {
@@ -24,9 +24,9 @@ requirejs.config({
 requirejs(['jquery',
         'uikit!tooltip',
         'utils',
-        '../js-lib/showdown.min',
-        '../js-lib/codemirror-5.20.2/lib/codemirror',
-        '../js-lib/codemirror-5.20.2/mode/markdown/markdown',
+        'vendor/showdown.min',
+        'vendor/codemirror-5.20.2/lib/codemirror',
+        'vendor/codemirror-5.20.2/mode/markdown/markdown',
         'markdown-editor'],
     function ($, UI, utils, showdown, CodeMirror, md, me) {
         // myTextarea = $("#editor")[0];
@@ -34,7 +34,9 @@ requirejs(['jquery',
             mode: "markdown",
             lineNumbers: true,
             //fixedGutter: false,
-            viewportMargin: 100
+            viewportMargin: 100,
+            cursorBlinkRate: 1000,
+            theme: "night"
         });
 
         //注册 change 事件

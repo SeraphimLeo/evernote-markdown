@@ -10,11 +10,18 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
+
 @app.route('/markdown', methods=['POST'])
 def trans2markdown():
     text_input = request.get_data()
     markdown_text = markdown.markdown(str(text_input).decode('utf-8'))
     return jsonify(markdown_text)
+
+
+@app.route('/style', methods=['GET'])
+def style():
+
+    pass
 
 
 if __name__ == '__main__':

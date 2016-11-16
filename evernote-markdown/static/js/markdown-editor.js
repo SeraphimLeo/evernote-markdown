@@ -2,7 +2,7 @@
  * Created by LucasLiu on 2016/11/15.
  */
 
-define(['../js-lib/codemirror-5.20.2/lib/codemirror'], function (CodeMirror) {
+define(['vendor/codemirror-5.20.2/lib/codemirror'], function (CodeMirror) {
 
     var _insertNewLine = function (editor) {
         var doc = editor.getDoc();
@@ -169,6 +169,7 @@ define(['../js-lib/codemirror-5.20.2/lib/codemirror'], function (CodeMirror) {
 
 
     return {
+        //插入
         insert: {
             header: _insertHeader,
             paragraph: _insertParagraph,
