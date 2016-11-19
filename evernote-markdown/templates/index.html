@@ -176,7 +176,8 @@
         <div class="uk-navbar-flip">
             <ul class="uk-navbar-nav">
                 <li class="uk-navbar-center">
-                    <a href="javascript:void(0)" class="uk-navbar-nav-subtitle">
+                    <a id="export-file" href="javascript:void(0)"
+                       class="uk-navbar-nav-subtitle">
                         <i class="uk-icon-share-square-o"></i>
                         <div>导出</div>
                     </a>
@@ -212,6 +213,19 @@
                    href="https://github.com/SeraphimLeo/evernote-markdown"></a>
                 <a class="uk-icon-button uk-icon-wordpress" target="_blank"
                    href="http://www.crazy-code.tech"></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模态对话框 -->
+    <div id="export-file-container" class="uk-modal" >
+        <div class="uk-modal-dialog">
+            <a class="uk-modal-close uk-close"></a>
+            <div class="uk-modal-header">导出文件</div>
+            <div class="uk-grid">
+                <button id="export-file-pdf" class="uk-button uk-width-1-1">PDF</button>
+                <button class="uk-button uk-width-1-1">PPT</button>
+                <button class="uk-button uk-width-1-1">DOC</button>
             </div>
         </div>
     </div>

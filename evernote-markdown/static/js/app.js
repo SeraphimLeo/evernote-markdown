@@ -248,5 +248,23 @@ requirejs(['jquery',
         //重做
         $(document).on("click", '#text-redo', function (e) {
             editor.getDoc().redo();
-        })
+        });
+
+        //导出文件
+        $(document).on("click", "#export-file", function (e) {
+            var exportFileContainer = UI.modal("#export-file-container", {
+                center: true
+            });
+            if (exportFileContainer.isActive()) {
+                exportFileContainer.hide();
+            } else {
+                exportFileContainer.show();
+            }
+
+        });
+
+        $(document).on("click", "#export-file-pdf", function (e) {
+
+        });
+
     });

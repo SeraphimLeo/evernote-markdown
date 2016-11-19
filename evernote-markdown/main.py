@@ -2,6 +2,7 @@
 
 import markdown
 from flask import Flask, jsonify, render_template, request
+from weasyprint import HTML
 
 app = Flask(__name__)
 
@@ -20,7 +21,12 @@ def trans2markdown():
 
 @app.route('/style', methods=['GET'])
 def style():
+    pass
 
+
+@app.route('/convert2pdf',methods=['GET'])
+def convert2pdf():
+    HTML('http://www.crazy-code.tech/index.php/2016/11/09/python-virtualenv/').write_pdf('/Users/LucasLiu/Downloads/weasyprint-website.pdf')
     pass
 
 
