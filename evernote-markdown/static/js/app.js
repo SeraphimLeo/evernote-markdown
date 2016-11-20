@@ -22,7 +22,7 @@ requirejs.config({
 });
 
 requirejs(['jquery',
-        'uikit!tooltip',
+        'uikit!tooltip,notify',
         'utils',
         'vendor/showdown.min',
         'vendor/codemirror-5.20.2/lib/codemirror',
@@ -264,7 +264,22 @@ requirejs(['jquery',
         });
 
         $(document).on("click", "#export-file-pdf", function (e) {
-
+            var content = $(".markdown-output").prop("outerHTML");
+            var css = $("#style-file").attr("href");
+            console.log(content);
+            $.ajax({
+                url: "/convert2pdf",
+                data: {
+                    "content": content,
+                    "css": css
+                },
+                method: "post"
+            }).success(function (data) {
+                UI.notify(data.msg, {status: "success"});
+                console.log(data);
+            }).error(function (data) {
+                console.error(data);
+            });
         });
 
     });

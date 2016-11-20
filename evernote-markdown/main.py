@@ -1,8 +1,9 @@
 # -*-coding:utf-8 -*-
 
 import markdown
+import os
 from flask import Flask, jsonify, render_template, request
-from weasyprint import HTML
+from weasyprint import HTML, CSS
 
 app = Flask(__name__)
 
@@ -24,10 +25,20 @@ def style():
     pass
 
 
-@app.route('/convert2pdf',methods=['GET'])
+@app.route('/convert2pdf', methods=['POST'])
 def convert2pdf():
-    HTML('http://www.crazy-code.tech/index.php/2016/11/09/python-virtualenv/').write_pdf('/Users/LucasLiu/Downloads/weasyprint-website.pdf')
-    pass
+    content = str(request.values.get('content'))
+    path = os.path.dirname(__file__) + '/export/pdf/weasyprint-website.pdf'
+    css = str(os.path.dirname(__file__) + '/' + request.values.get('css'))
+    HTML(string=content).write_pdf(target=path, stylesheets=[CSS(filename=css)])
+    result = {
+        'code': 200,
+        'msg': 'successful',
+        'data': {
+            'file_name': path
+        }
+    }
+    return jsonify(result)
 
 
 if __name__ == '__main__':
