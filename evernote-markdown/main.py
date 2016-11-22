@@ -27,7 +27,7 @@ def style():
 
 @app.route('/convert2pdf', methods=['POST'])
 def convert2pdf():
-    content = str(request.values.get('content'))
+    content = request.values.get('content')
     path = os.path.dirname(__file__) + '/export/pdf/weasyprint-website.pdf'
     css = str(os.path.dirname(__file__) + '/' + request.values.get('css'))
     HTML(string=content).write_pdf(target=path, stylesheets=[CSS(filename=css)])
